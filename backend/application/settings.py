@@ -13,7 +13,8 @@ class AppSettings(BaseModel):
 
 
 class DatabaseSettings(BaseModel):
-    database: str = "postgresql"
+    protocol: str = "postgresql"
+    database: str = "postgres"
     host: str = "localhost"
     port: int = 5432
     user: str = "postgres"
@@ -27,6 +28,6 @@ class Settings(BaseSettings):
 
     def get_db_settings(self)->dict[str,Any]:
         settings = self.model_dump()['database']
-        settings['url'] = f"{settings['database']}://{settings['user']}:{settings['password']}@{settings['host']}:{settings['port']}/{settings['database']}"
+        settings['url'] = f"{settings['protocol']}://{settings['user']}:{settings['password']}@{settings['host']}:{settings['port']}/{settings['database']}"
         return settings
         
