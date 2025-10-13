@@ -17,7 +17,7 @@ T = TypeVar("T",bound=OpenTaxEntity)
 class GenericRepository(Generic[T],ABC):
     
     @abstractmethod
-    def read(self,**filters:dict[str,Any])->List[T]:
+    def read(self,offset:Optional[int],limit:Optional[int],**filters:dict[str,Any])->List[T]:
         raise NotImplementedError()
 
 class GenericSqlRepository(GenericRepository[T]):
@@ -36,7 +36,6 @@ class GenericSqlRepository(GenericRepository[T]):
         for key,value in filters.items():
             if value is None:
                 continue
-            
             if key == 'from_date' and hasattr(self.model,"timestamp"):
                 where_clauses.append(getattr(self.model,"timestamp") >= value)
             elif key == 'to_date' and hasattr(self.model,"timestamp"):
@@ -53,8 +52,12 @@ class GenericSqlRepository(GenericRepository[T]):
         
         return statement
         
-    def read(self,**filters:dict[str,Any])->List[T]:
+    def read(self,offset:Optional[int],limit:Optional[int],**filters:dict[str,Any])->List[T]:
         statement = self._build_sqlmodel_select(**filters)
+        if offset is not None:
+            statement = statement.offset(offset)
+        if limit is not None:
+            statement = statement.limit(limit)
         # IGNORE: It seems .all() returns a Sequence[Unknown] which causes a type error
         return self.session.exec(statement).all() # type: ignore
 

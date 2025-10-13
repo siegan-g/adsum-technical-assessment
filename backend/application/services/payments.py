@@ -9,9 +9,9 @@ db_settings = settings.get_db_settings()
 engine = create_sqlmodel_engine(db_settings['url'])
 SQLModel.metadata.create_all(engine)
 
-def read(**filters):
+def read(offset,limit,**filters):
     with UnitOfWork(session_factory=session_factory(engine)) as uow:
-        payments = uow.payments.read(**filters)
+        payments = uow.payments.read(offset,limit,**filters)
         uow.commit()
         return payments
     

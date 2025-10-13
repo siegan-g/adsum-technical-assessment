@@ -23,6 +23,8 @@ class PaymentFilter(BaseModel):
     from_date:Optional[datetime] = None
     to_date:Optional[datetime] = None
     status:Optional[str] = None
+    offset:Optional[int] = None
+    limit:Optional[int] = None
 
 class PaymentRepository(GenericSqlRepository[Payment]):
     def __init__(self, session):

@@ -10,6 +10,7 @@ class AppSettings(BaseModel):
     prefix: str = "/api"
     host: str = "0.0.0.0"
     port: int = 8000
+    max_limit: int = 100
 
 
 class DatabaseSettings(BaseModel):
@@ -30,4 +31,7 @@ class Settings(BaseSettings):
         settings = self.model_dump()['database']
         settings['url'] = f"{settings['protocol']}://{settings['user']}:{settings['password']}@{settings['host']}:{settings['port']}/{settings['database']}"
         return settings
+    
+    def get_app_settings(self)->dict[str,Any]:
+        return self.model_dump()['app']
         
