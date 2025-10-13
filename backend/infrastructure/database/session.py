@@ -8,4 +8,4 @@ def create_sqlmodel_engine(connection_string:str)->Engine:
 
 
 def session_factory(engine: Engine) -> Callable[[], Session]:
-    return lambda: Session(bind=engine, autocommit=False, autoflush=False)
+    return lambda: Session(bind=engine, autocommit=False, autoflush=False, expire_on_commit=False)
