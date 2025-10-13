@@ -18,6 +18,7 @@ loguru==0.7.3
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
+-e git+ssh://git@github.com/siegan-g/adsum-technical-assessment.git@a039f0d181589c6a5b82d2ad09b7e7e10e766b1a#egg=OpenTax&subdirectory=backend
 pydantic==2.12.0
 pydantic-settings==2.11.0
 pydantic_core==2.41.1
@@ -33,6 +34,7 @@ setuptools==80.9.0
 shellingham==1.5.4
 sniffio==1.3.1
 SQLAlchemy==2.0.44
+sqlmodel==0.0.27
 starlette==0.48.0
 typer==0.19.2
 typing-inspection==0.4.2
