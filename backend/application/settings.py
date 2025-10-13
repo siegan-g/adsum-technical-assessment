@@ -13,7 +13,7 @@ class AppSettings(BaseModel):
 
 
 class DatabaseSettings(BaseModel):
-    database: str = "postgres"
+    database: str = "postgresql"
     host: str = "localhost"
     port: int = 5432
     user: str = "postgres"

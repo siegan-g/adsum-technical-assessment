@@ -1,8 +1,9 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field
+from pydantic import BaseModel
 from decimal import Decimal
+from typing import Optional
 from datetime import datetime, timezone
 from infrastructure.database.repository import OpenTaxEntity, GenericSqlRepository
-
 
 class Payment(OpenTaxEntity, table=True):
     # IGNORE: Unfortunatetly pylance/pyright doesn't play nicely with __tablename__ definitions without a hacky workaround
@@ -14,6 +15,14 @@ class Payment(OpenTaxEntity, table=True):
     merchant: str = Field(default="", max_length=100, nullable=False)
     timestamp: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
 
+class PaymentFilter(BaseModel):
+    # Ensure BaseModel is implemented to keep a seperation of means of concern. This model should exist only on the application layer
+    """
+    Class with relevant filters for the Payment Class. 
+    """
+    from_date:Optional[datetime] = None
+    to_date:Optional[datetime] = None
+    status:Optional[str] = None
 
 class PaymentRepository(GenericSqlRepository[Payment]):
     def __init__(self, session):

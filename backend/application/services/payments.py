@@ -12,6 +12,7 @@ engine = create_sqlmodel_engine(db_settings['url'])
 
 def read(**filters):
     with UnitOfWork(session_factory=session_factory(engine)) as uow:
-        uow.payments.read(**filters)
+        results =  uow.payments.read(**filters)
+        return results
     
     
