@@ -20,7 +20,7 @@ class GenericRepository(Generic[T],ABC):
     def read(self,**filters:dict[str,Any])->List[T]:
         raise NotImplementedError()
 
-class GenericSqlRepository(GenericRepository[T],ABC):
+class GenericSqlRepository(GenericRepository[T]):
     def __init__(self,session:Session,model:Type[T]) -> None:
         self.session = session
         self.model = model
@@ -34,15 +34,23 @@ class GenericSqlRepository(GenericRepository[T],ABC):
         statement = select(self.model)
         where_clauses:list[Any] = []
         for key,value in filters.items():
+            if value is None:
+                continue
+            
             if key == 'from_date' and hasattr(self.model,"timestamp"):
                 where_clauses.append(getattr(self.model,"timestamp") >= value)
-            if key == 'to_date' and hasattr(self.model,"timestamp"):
+            elif key == 'to_date' and hasattr(self.model,"timestamp"):
                 where_clauses.append(getattr(self.model,"timestamp") <= value)
             else:
                 if not hasattr((self.model),key):
                     raise ValueError(f"Invalid filter provided {key}")
                 where_clauses.append(getattr(self.model,key)==value)
-                statement = statement.where(where_clauses[0])
+        
+        if len(where_clauses) > 1:      
+            statement = statement.where(and_(*where_clauses))
+        elif len(where_clauses) == 1:
+            statement = statement.where(where_clauses[0])
+        
         return statement
         
     def read(self,**filters:dict[str,Any])->List[T]:
