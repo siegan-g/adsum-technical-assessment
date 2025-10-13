@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from decimal import Decimal
 from datetime import datetime 
 
-class Summary(BaseModel, table=False):
+class Summary(BaseModel):
     total_payments_amount: Decimal 
     total_payments_count: int
     total_invoices_amount: Decimal
