@@ -18,7 +18,8 @@ loguru==0.7.3
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
--e git+ssh://git@github.com/siegan-g/adsum-technical-assessment.git@a039f0d181589c6a5b82d2ad09b7e7e10e766b1a#egg=OpenTax&subdirectory=backend
+-e git+ssh://git@github.com/siegan-g/adsum-technical-assessment.git@7ad38f381f5aa16d70ac1cd7c16b371024982b2f#egg=OpenTax&subdirectory=backend
+psycopg2-binary==2.9.11
 pydantic==2.12.0
 pydantic-settings==2.11.0
 pydantic_core==2.41.1
