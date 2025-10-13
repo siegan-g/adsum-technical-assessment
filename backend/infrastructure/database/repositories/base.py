@@ -2,7 +2,6 @@ from typing import Optional,TypeVar ,Generic,List, Any, Type
 from abc import ABC, abstractmethod
 from sqlmodel import SQLModel,Field,Session,select,and_ # type: ignore
 from sqlmodel.sql.expression import SelectOfScalar
-from datetime import datetime
 
 
 class OpenTaxEntity(SQLModel):

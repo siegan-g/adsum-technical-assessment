@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from decimal import Decimal
 from typing import Optional
 from datetime import datetime, timezone
-from infrastructure.database.repository import OpenTaxEntity, GenericSqlRepository
+from infrastructure.database.repositories.base import OpenTaxEntity, GenericSqlRepository
 
 class Invoice(OpenTaxEntity, table=True):
     # IGNORE: Unfortunatetly pylance/pyright doesn't play nicely with __tablename__ definitions without a hacky workaround
@@ -26,7 +26,3 @@ class InvoiceFilter(BaseModel):
     status:Optional[str] = None
     offset:Optional[int] = None
     limit:Optional[int] = None
-
-class InvoiceRepository(GenericSqlRepository[Invoice]):
-    def __init__(self, session):
-        super().__init__(session, Invoice)

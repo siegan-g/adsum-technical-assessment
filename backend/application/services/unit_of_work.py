@@ -1,5 +1,5 @@
-from models.payments import PaymentRepository
-from models.invoices import InvoiceRepository
+from infrastructure.database.repositories.invoices import InvoiceRepository
+from infrastructure.database.repositories.payments import PaymentRepository
 from typing import Callable
 from sqlmodel import Session
 
