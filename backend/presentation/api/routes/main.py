@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from routes import health,payments
+from routes import health,payments,invoices
 
 
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(payments.router)
+api_router.include_router(invoices.router)
