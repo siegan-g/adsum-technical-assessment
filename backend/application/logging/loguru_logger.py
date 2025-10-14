@@ -1,4 +1,5 @@
-from logger import Logger
+from application.logging.logger import Logger
+from application.logging.db_sink import database_sink
 from loguru import logger
 from typing import Any
 from sys import stdout
@@ -7,9 +8,14 @@ from sys import stdout
 class LoguruLogger(Logger):
     def __init__(self, settings: dict[str, Any]) -> None:
         self.settings = settings
-        sink = settings.get("sink", stdout)
+        if settings.get("sink", "stdout") == "database":
+            sink = database_sink
+        else:
+            sink = stdout
+            
         colorizer = True if sink == stdout else False
-        level = settings.get("level", "DEBUG")
+        
+        level = "DEBUG" if settings.get("debug", True) == True else "INFO" 
         # Standard practice to remove all handlers before adding a new one
         logger.remove()
         logger.add(sink, colorize=colorizer, level=level)

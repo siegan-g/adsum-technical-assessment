@@ -11,6 +11,7 @@ class AppSettings(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
     max_limit: int = 100
+    sink:str = "database"
 
 
 class DatabaseSettings(BaseModel):

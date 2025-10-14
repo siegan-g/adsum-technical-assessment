@@ -1,5 +1,6 @@
 from infrastructure.database.repositories.invoices import InvoiceRepository
 from infrastructure.database.repositories.payments import PaymentRepository
+from infrastructure.database.repositories.logs import LogsRepository
 from typing import Callable
 from sqlmodel import Session
 
@@ -11,6 +12,7 @@ class UnitOfWork:
         self.session = self.session_factory()
         self.payments = PaymentRepository(self.session)
         self.invoices = InvoiceRepository(self.session)
+        self.logs = LogsRepository(self.session)
         return self
     
     def __exit__(self,exc_type,exc_value,traceback):
