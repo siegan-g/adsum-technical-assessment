@@ -1,0 +1,26 @@
+from infrastructure.database.repositories.invoices import InvoiceRepository
+from infrastructure.database.repositories.payments import PaymentRepository
+from infrastructure.database.repositories.logs import LogsRepository
+from typing import Callable
+from sqlmodel import Session
+
+class UnitOfWork:
+    def __init__(self,session_factory:Callable[[],Session])->None:
+        self.session_factory = session_factory
+        
+    def __enter__(self):
+        self.session = self.session_factory()
+        self.payments = PaymentRepository(self.session)
+        self.invoices = InvoiceRepository(self.session)
+        self.logs = LogsRepository(self.session)
+        return self
+    
+    def __exit__(self,exc_type,exc_value,traceback):
+        self.rollback()
+        
+    
+    def commit(self):
+        self.session.commit()
+        
+    def rollback(self):
+        self.session.rollback()
