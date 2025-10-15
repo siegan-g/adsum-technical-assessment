@@ -1,23 +1,20 @@
-from fastapi import APIRouter, Query, HTTPException
-from application.services import payments
-from application.services import summary
-from application.settings import Settings
-from typing import Optional
+from fastapi import APIRouter, Depends
+from application.services.summary import SummaryService
+from application.dependency_container import get_summary_service
 from datetime import datetime
 from models.summary import Summary, SummaryFilter
 
 router = APIRouter(prefix="/summary", tags=["summary"])
-settings = Settings()
-app_settings = settings.get_app_settings()
 
 
 @router.get("/", response_model=Summary)
-async def read_payments(
-    from_date: datetime ,
-    to_date: datetime
+async def get_summary(
+    from_date: datetime,
+    to_date: datetime,
+    summary_service: SummaryService = Depends(get_summary_service)
 ):
     filters = SummaryFilter(
         from_date=from_date, to_date=to_date
     )
-    results = summary.get(**filters.model_dump())
+    results = summary_service.get(**filters.model_dump())
     return results
