@@ -26,7 +26,7 @@ class DatabaseSettings(BaseModel):
 class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     database:DatabaseSettings  = DatabaseSettings()
-    model_config = SettingsConfigDict(toml_file="application/config.toml")
+    model_config = SettingsConfigDict(toml_file="config.toml")
 
     @classmethod
     def settings_customise_sources(
