@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, HTTPException, Depends
-from application.services.logs import LogsService
-from application.dependency_container import get_logs_service, get_settings
+from application.services.logs import AgentLogsService
+from application.dependency_container import get_agent_logs_service, get_settings
 from application.settings import Settings
 from typing import Optional
 from datetime import datetime
@@ -19,7 +19,7 @@ async def read_logs(
     level: Optional[str] = Query(None, description="Filter by log status"),
     offset: Optional[int] = Query(None, description="Pagination offset"),
     limit: Optional[int] = Query(10, description="Pagination limit"),
-    logs_service: LogsService = Depends(get_logs_service),
+    logs_service: AgentLogsService = Depends(get_agent_logs_service),
     settings: Settings = Depends(get_settings)
 ):
     app_settings = settings.get_app_settings()
