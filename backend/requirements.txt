@@ -23,7 +23,6 @@ loguru==0.7.3
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
--e git+ssh://git@github.com/siegan-g/adsum-technical-assessment.git@4e83e8b4e469750f76379ceae8ef26cb55f8b2d3#egg=OpenTax&subdirectory=backend
 packaging==25.0
 pluggy==1.6.0
 psycopg2-binary==2.9.11
