@@ -8,8 +8,6 @@ class AppSettings(BaseModel):
     version: str = "1.0"
     debug: bool = True
     prefix: str = "/api"
-    host: str = "0.0.0.0"
-    port: int = 8000
     max_limit: int = 100
     sink:str = "database"
 
@@ -26,7 +24,7 @@ class DatabaseSettings(BaseModel):
 class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     database:DatabaseSettings  = DatabaseSettings()
-    model_config = SettingsConfigDict(toml_file="application/config.toml")
+    model_config = SettingsConfigDict(toml_file="config.toml")
 
     @classmethod
     def settings_customise_sources(
