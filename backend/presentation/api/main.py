@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes.main import api_router
+from presentation.api.routes.main import api_router
 from application.dependency_container import get_settings
 
 import uvicorn
