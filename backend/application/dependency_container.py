@@ -7,6 +7,7 @@ from application.services.payments import PaymentsService
 from application.services.invoices import InvoicesService
 from application.services.logs import AgentLogsService
 from application.services.summary import SummaryService
+from application.services.seeder import SeederService
 
 def get_settings() -> Settings:
     return Settings()
@@ -34,3 +35,11 @@ def get_agent_logs_service() -> AgentLogsService:
 
 def get_summary_service() -> SummaryService:
     return SummaryService(engine=get_engine(), logger=get_logger())
+
+def get_seeder_service() -> SeederService:
+    return SeederService(
+        engine=get_engine(), 
+        logger=get_logger(),
+        payments_service=get_payments_service(),
+        invoices_service=get_invoices_service()
+    )
