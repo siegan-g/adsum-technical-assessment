@@ -8,13 +8,15 @@ class LlmService:
         self.logger =logger
         self.llm = llm
 
-    def create_text(self, message: str | None) -> PromptResponse:
+    def generate(self, message: str) -> PromptResponse:
+        self.logger.info(f"Receieved Prompt: {message}")
         response_text = self.llm.generate_text(message)
         prompt_response = PromptResponse(
             timestamp=datetime.now(timezone.utc),
             response=response_text,
             prompt=message,
         )
+        self.logger.info(f"Generated Response: {response_text}")
         return prompt_response
         
 

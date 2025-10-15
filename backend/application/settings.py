@@ -22,10 +22,14 @@ class DatabaseSettings(BaseModel):
     user: str = "postgres"
     password: str = "postgres"
 
+class AiSettings(BaseModel):
+    api_key: str = ""
+
 
 class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     database:DatabaseSettings  = DatabaseSettings()
+    ai:AiSettings  = AiSettings()
     model_config = SettingsConfigDict(toml_file="application/config.toml")
 
     @classmethod
@@ -47,4 +51,7 @@ class Settings(BaseSettings):
     
     def get_app_settings(self)->dict[str,Any]:
         return self.model_dump()['app']
+    
+    def get_ai_settings(self)->dict[str,Any]:
+        return self.model_dump()['ai']
         

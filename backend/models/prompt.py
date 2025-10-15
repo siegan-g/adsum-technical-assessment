@@ -9,4 +9,4 @@ class PromptResponse(BaseModel):
 
 
 class PromptRequest(BaseModel):
-    prompt: str | None
+    prompt: str
