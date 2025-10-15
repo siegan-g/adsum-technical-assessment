@@ -26,7 +26,8 @@ class AiSettings(BaseModel):
 
 class Settings(BaseSettings):
     app: AppSettings = AppSettings()
-    database:DatabaseSettings  = DatabaseSettings()
+    database: DatabaseSettings = DatabaseSettings()
+    ai: AiSettings = AiSettings()
     model_config = SettingsConfigDict(toml_file="config.toml")
 
     @classmethod
