@@ -14,6 +14,6 @@ class InvoicesService:
         with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
             invoices = uow.invoices.read(offset, limit, **filters)
             uow.commit()
-            self.logger.info(f"Successfully retrieved {len(invoices)} invoices")
+            self.logger.info(f"Returned {len(invoices)} invoices")
             return invoices
     

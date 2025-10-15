@@ -14,6 +14,6 @@ class PaymentsService:
         with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
             payments = uow.payments.read(offset, limit, **filters)
             uow.commit()
-            self.logger.info(f"Successfully retrieved {len(payments)} payments")
+            self.logger.info(f"Returned {len(payments)} payments")
             return payments
     

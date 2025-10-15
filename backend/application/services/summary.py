@@ -50,7 +50,7 @@ class SummaryService:
             
             uow.commit()
             
-            self.logger.info(f"Successfully generated summary with {total_payments_count} payments and {total_invoices_count} invoices")
+            self.logger.info(f"Generated summary report from {from_date} to {to_date}")
             
             # Return aggregated summary
             return Summary(
