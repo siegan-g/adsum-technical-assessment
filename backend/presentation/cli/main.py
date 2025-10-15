@@ -33,7 +33,7 @@ def create_parser() -> argparse.ArgumentParser:
 def handle_seed_command(args) -> int:
     """Handle the seed command."""
     try:
-        print(f"Starting database seeding...")
+        print(f"Starting database seeding 🌱 ...")
         print(f"   Payments: {args.payments}")
         print(f"   Invoices: {args.invoices}")
         

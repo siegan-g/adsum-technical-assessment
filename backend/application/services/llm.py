@@ -1,21 +1,23 @@
 from application.logging.logger import Logger
 from infrastructure.ai.llm import Llm
-from datetime import datetime
-from models.prompt import Prompt
+from datetime import datetime, timezone
+from models.prompt import PromptResponse
 
 class LlmService:
     def __init__(self,logger:Logger,llm:Llm):
         self.logger =logger
         self.llm = llm
 
-    def create_text(self, message: str) -> Prompt:
+    def generate(self, message: str) -> PromptResponse:
+        self.logger.info(f"Receieved Prompt: {message}")
         response_text = self.llm.generate_text(message)
-        prompt = Prompt(
-            timestamp=datetime.utcnow(),
+        prompt_response = PromptResponse(
+            timestamp=datetime.now(timezone.utc),
             response=response_text,
             prompt=message,
         )
-        return prompt
+        self.logger.info(f"Generated Response: {response_text}")
+        return prompt_response
         
 
     
