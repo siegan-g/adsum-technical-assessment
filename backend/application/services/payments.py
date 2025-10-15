@@ -1,6 +1,6 @@
 from application.services.unit_of_work import UnitOfWork
 from sqlmodel import SQLModel
-from infrastructure.database.session import create_sqlmodel_engine, session_factory
+from infrastructure.database.session import session_factory
 from application.logging.logger import Logger
 
 
