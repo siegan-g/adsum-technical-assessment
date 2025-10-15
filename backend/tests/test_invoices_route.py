@@ -36,20 +36,18 @@ class _StubInvoicesService(InvoicesService):
         ]
 
 
-@pytest.mark.anyio
-async def test_invoices_limit_exceeds_returns_400(client):
+def test_invoices_limit_exceeds_returns_400(client):
     settings: Settings = get_settings()
     max_limit = settings.get_app_settings()["max_limit"]
 
-    response = await client.get(f"/api/invoices/?limit={max_limit + 1}")
+    response = client.get(f"/api/invoices/?limit={max_limit + 1}")
     assert response.status_code == 400
 
 
-@pytest.mark.anyio
-async def test_invoices_returns_list_when_ok(app: FastAPI, client):
+def test_invoices_returns_list_when_ok(app: FastAPI, client):
     app.dependency_overrides[get_invoices_service] = lambda: _StubInvoicesService()
     try:
-        response = await client.get("/api/invoices/?limit=2")
+        response = client.get("/api/invoices/?limit=2")
         assert response.status_code == 200
         data = response.json()
         assert isinstance(data, list)

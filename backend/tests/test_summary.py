@@ -27,15 +27,14 @@ class _StubSummaryService(SummaryService):
         )
 
 
-@pytest.mark.anyio
-async def test_summary_route_returns_summary(app: FastAPI, client):
+def test_summary_route_returns_summary(app: FastAPI, client):
     app.dependency_overrides[get_summary_service] = lambda: _StubSummaryService()
     try:
-        response = await client.get(
+        response = client.get(
             "/api/summary/",
             params={
-                "from_date": datetime.now(timezone.utc),
-                "to_date": datetime.now(timezone.utc),
+                "from_date": datetime.now(timezone.utc).isoformat(),
+                "to_date": datetime.now(timezone.utc).isoformat(),
             },
         )
         assert response.status_code == 200
