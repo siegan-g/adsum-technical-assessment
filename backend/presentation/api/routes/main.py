@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from routes import health, payments, invoices, summary, agent_logs, ai_assistant
+from presentation.api.routes import health, payments, invoices, summary, agent_logs, ai_assistant
 
 
 api_router = APIRouter()
