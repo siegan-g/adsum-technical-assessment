@@ -10,7 +10,7 @@ class OpenTaxEntity(SQLModel):
     Any Bounded Context should implement this class
     """
 
-    id: int = Field(None, description="Entity's Unique ID",primary_key=True)
+    id: int | None = Field(None, description="Entity's Unique ID",primary_key=True)
     
 T = TypeVar("T",bound=OpenTaxEntity)
 class GenericRepository(Generic[T],ABC):
@@ -18,6 +18,14 @@ class GenericRepository(Generic[T],ABC):
     @abstractmethod
     def read(self,offset:Optional[int],limit:Optional[int],**filters:dict[str,Any])->List[T]:
         raise NotImplementedError()
+    
+    @abstractmethod
+    def insert(self,entity:T)->T:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def update(self,entity:T)->T:
+        raise NotImplementedError() 
 
 class GenericSqlRepository(GenericRepository[T]):
     def __init__(self,session:Session,model:Type[T]) -> None:
@@ -60,4 +68,14 @@ class GenericSqlRepository(GenericRepository[T]):
         # IGNORE: It seems .all() returns a Sequence[Unknown] which causes a type error
         return self.session.exec(statement).all() # type: ignore
 
-
+    def insert(self,entity:T)->T:
+        self.session.add(entity)
+        self.session.commit()
+        self.session.refresh(entity)
+        return entity
+    
+    def update(self,entity:T)->T:
+        self.session.add(entity)
+        self.session.commit()
+        self.session.refresh(entity)
+        return entity

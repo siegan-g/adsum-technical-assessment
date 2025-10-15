@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict,PydanticBaseSettingsSource,TomlConfigSettingsSource
 from pydantic import BaseModel
 from typing import Any
 
@@ -11,6 +11,7 @@ class AppSettings(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
     max_limit: int = 100
+    sink:str = "database"
 
 
 class DatabaseSettings(BaseModel):
@@ -26,6 +27,18 @@ class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     database:DatabaseSettings  = DatabaseSettings()
     model_config = SettingsConfigDict(toml_file="application/config.toml")
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        return (TomlConfigSettingsSource(settings_cls),)
+
 
     def get_db_settings(self)->dict[str,Any]:
         settings = self.model_dump()['database']
