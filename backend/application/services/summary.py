@@ -15,11 +15,6 @@ class SummaryService:
         self.logger = logger
         
     def aggregate(self, results: List[Payment] | List[Invoice], from_date: datetime, to_date: datetime, status: Optional[str] = None):
-        filters = {}
-        filters['from_date'] = from_date
-        filters['to_date'] = to_date
-        filters['status'] = status
-        
         amount = sum(result.amount for result in results)
         count = len(results)
         
@@ -43,8 +38,7 @@ class SummaryService:
             paid_invoices_amount, paid_invoices_count = self.aggregate(invoices, from_date=from_date, to_date=to_date)
             
             
-            filters['status'] = "Unpaid"
-            
+            filters['status'] = "Fail"
             invoices = uow.invoices.read(offset=None, limit=None, **filters)
             unpaid_invoices_amount, unpaid_invoices_count = self.aggregate(invoices, from_date=from_date, to_date=to_date)
             
