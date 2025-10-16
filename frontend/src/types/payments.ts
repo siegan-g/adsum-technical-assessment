@@ -1,10 +1,17 @@
-type PaymentStatus = "Paid" | "Pending" | "Fail" 
+export type PaymentStatus = "Paid" | "Pending" | "Fail" 
 
-type Payment = {
+export type Payment = {
   id: string;                
   amount: number;            
   currency: string;          
-  status: InvoiceStatus;     
+  status: PaymentStatus;     
   merchant: string;            
   timestamp: string;         
 };
+
+export type PaginatedPayments = {
+    data: Payment[];
+    total: number;
+    limit: number;
+    offset: number;
+}
