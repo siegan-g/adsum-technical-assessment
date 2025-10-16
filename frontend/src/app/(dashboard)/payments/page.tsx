@@ -22,8 +22,9 @@ import {
 export default function PaymentsPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const today = new Date().toISOString().split("T")[0];
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["payments", page, fromDate, toDate],
