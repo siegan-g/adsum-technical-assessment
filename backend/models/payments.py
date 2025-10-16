@@ -25,11 +25,13 @@ class PaymentFilter(BaseModel):
     from_date: Optional[datetime] = None
     to_date: Optional[datetime] = None
     status: Optional[str] = None
+
+class PaymentPaginate(BaseModel):
     offset: Optional[int] = None
     limit: Optional[int] = None
-
 
 class PaymentResponse(BaseModel):
     payments: Optional[List[Payment]] = None
     payment_filter: Optional[PaymentFilter] = None
+    payment_paginate: Optional[PaymentPaginate] = None
     count: Optional[int] = 0
