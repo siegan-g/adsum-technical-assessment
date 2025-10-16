@@ -4,11 +4,11 @@ from application.dependency_container import get_invoices_service, get_settings
 from application.settings import Settings
 from typing import Optional
 from datetime import datetime
-from models.invoices import InvoiceFilter, Invoice 
+from models.invoices import InvoiceFilter, InvoiceResponse, InvoicePaginate 
 
 router = APIRouter(prefix="/invoices", tags=["invoices"])
 
-@router.get("/", response_model=list[Invoice])
+@router.get("/", response_model=InvoiceResponse)
 async def read_invoices(
     from_date: Optional[datetime] = Query(
         None, description="Filter invoices from this date"
@@ -25,6 +25,8 @@ async def read_invoices(
     app_settings = settings.get_app_settings()
     if limit > app_settings['max_limit']:
         raise HTTPException(status_code=400, detail=f"Query limit has been exceeded")
-    filters = InvoiceFilter(from_date=from_date, to_date=to_date, status=status, offset=offset, limit=limit)
-    results = invoices_service.read(**filters.model_dump())
-    return results 
+    filters = InvoiceFilter(from_date=from_date, to_date=to_date, status=status)
+    paginate = InvoicePaginate(offset=offset, limit=limit)
+    results = invoices_service.read(paginate, **filters.model_dump())
+    count = invoices_service.count(**filters.model_dump())
+    return InvoiceResponse(invoices=results, invoice_filter=filters, invoice_paginate=paginate, count=count) 
