@@ -23,6 +23,7 @@ class DatabaseSettings(BaseModel):
 
 class AiSettings(BaseModel):
     api_key: str = ""
+    instructions:str = ""
 
 
 class Settings(BaseSettings):

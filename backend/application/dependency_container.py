@@ -39,7 +39,7 @@ def get_mock_llm() -> MockLLM:
 def get_gemini_llm() -> GeminiLlm:
     settings = get_settings()
     ai_settings = settings.get_ai_settings()
-    gemini = GeminiLlm(ai_settings["api_key"])
+    gemini = GeminiLlm(ai_settings["instructions"],ai_settings["api_key"])
     return gemini
 
 
