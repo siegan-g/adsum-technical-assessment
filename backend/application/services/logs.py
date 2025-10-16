@@ -1,17 +1,17 @@
 from application.services.unit_of_work import UnitOfWork
-from sqlmodel import SQLModel
-from infrastructure.database.session import create_sqlmodel_engine, session_factory
-from application.logging.logger import Logger
-from models.logs import Logs
+from infrastructure.database.session import session_factory
+from models.logs import Logs, LogsPaginate
+from typing import Any, List
+from sqlalchemy.engine import Engine
 
 
 class AgentLogsService:
-    def __init__(self, engine):
+    def __init__(self, engine:Engine):
         self.engine = engine
         
-    def read(self, offset, limit, **filters):
+    def read(self, paginate:LogsPaginate, **filters:Any)->List[Logs]:
         with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
-            logs = uow.logs.read(offset, limit, **filters)
+            logs = uow.logs.read(paginate.offset, paginate.limit, **filters)
             uow.commit()
             return logs
     
