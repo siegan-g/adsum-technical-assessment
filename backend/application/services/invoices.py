@@ -27,3 +27,11 @@ class InvoicesService:
             uow.commit()
             self.logger.info(f"Created invoice with ID: {created_invoice.id}")
             return created_invoice
+
+    def count(self,**filters: Any) -> int | None:
+        self.logger.debug(f"Counting payments with filters={filters}")
+        with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
+            count = uow.invoices.count(**filters)
+            uow.commit()
+            self.logger.info(f"Found {count} payments matching filters")
+            return count
