@@ -11,7 +11,7 @@ class PaymentsService:
         self.engine = engine
         self.logger = logger
 
-    def read(self, offset: int, limit: int, **filters: dict[str, Any]) -> List[Payment]:
+    def read(self, offset: int, limit: int, **filters: Any) -> List[Payment]:
         self.logger.debug(
             f"Reading payments with offset={offset}, limit={limit}, filters={filters}"
         )
@@ -29,7 +29,7 @@ class PaymentsService:
             self.logger.info(f"Created payment with ID: {created_payment.id}")
             return created_payment
 
-    def count(self, **filters: dict[str, Any]) -> int | None:
+    def count(self, **filters: Any) -> int | None:
         self.logger.debug(f"Counting payments with filters={filters}")
         with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
             count = uow.payments.count(**filters)

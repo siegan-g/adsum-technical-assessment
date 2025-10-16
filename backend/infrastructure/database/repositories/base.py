@@ -20,7 +20,7 @@ class GenericRepository(Generic[T], ABC):
 
     @abstractmethod
     def read(
-        self, offset: Optional[int], limit: Optional[int], **filters: dict[str, Any]
+        self, offset: Optional[int], limit: Optional[int], **filters: Any
     ) -> List[T]:
         raise NotImplementedError()
 
@@ -33,7 +33,7 @@ class GenericRepository(Generic[T], ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def count(self, **filters: dict[str, Any]) -> int | None:
+    def count(self, **filters: Any) -> int | None:
         raise NotImplementedError()
 
 
@@ -44,14 +44,14 @@ class GenericSqlRepository(GenericRepository[T]):
 
     # NOTE IF SOMETHING BREAKS COME BACK HERE
     def _build_sqlmodel_select(
-        self, entity: Any, **filters: Optional[str | int]
+        self, **filters: Any
     ) -> SelectOfScalar[Any]:
         """
         A simple select query builder which evalutes filter kwargs.
         Has built in support for date filters if the [T] model has a timestamp field
         """
 
-        statement = select(entity)
+        statement = select(self.model)
         where_clauses: list[Any] = []
         for key, value in filters.items():
             if value is None:
@@ -76,9 +76,9 @@ class GenericSqlRepository(GenericRepository[T]):
         self,
         offset: Optional[int],
         limit: Optional[int],
-        **filters: Optional[str | int],
+        **filters: Any,
     ) -> List[T]:
-        statement = self._build_sqlmodel_select(self.model, **filters)
+        statement = self._build_sqlmodel_select( **filters)
         if offset is not None:
             statement = statement.offset(offset)
         if limit is not None:
@@ -98,7 +98,7 @@ class GenericSqlRepository(GenericRepository[T]):
         self.session.refresh(entity)
         return entity
 
-    def count(self, **filters: Optional[str|int]) -> int:
+    def count(self, **filters: Any) -> int:
         statement = self._build_sqlmodel_select(func.count(cast(Any, self.model.id)),**filters)
         result = self.session.exec(statement).first()
         return result if result is not None else 0
