@@ -1,6 +1,6 @@
-type InvoiceStatus = "Paid" | "Pending" | "Fail" 
+export type InvoiceStatus = "Paid" | "Pending" | "Fail" 
 
-type Invoice = {
+export type Invoice = {
   id: string;                
   amount: number;            
   currency: string;          
