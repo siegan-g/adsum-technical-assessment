@@ -26,8 +26,13 @@ export default function PaymentsPage() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+<<<<<<< Updated upstream
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["payments", page, fromDate, toDate],
+=======
+  const { data, isLoading, isError} = useQuery({
+    queryKey: ["payments", page, fromDate, toDate, status],
+>>>>>>> Stashed changes
     queryFn: () =>
       fetchPayments({
         limit,
@@ -58,8 +63,26 @@ export default function PaymentsPage() {
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
         />
+<<<<<<< Updated upstream
         <Button variant="contained" onClick={() => refetch()}>
           Filter
+=======
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel>Status</InputLabel>
+          <Select
+            value={status}
+            label="Status"
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="Paid">Paid</MenuItem>
+            <MenuItem value="Pending">Pending</MenuItem>
+            <MenuItem value="Fail">Fail</MenuItem>
+          </Select>
+        </FormControl>
+        <Button variant="outlined" onClick={resetFilters}>
+          Clear Filters
+>>>>>>> Stashed changes
         </Button>
       </Stack>
 
