@@ -9,9 +9,21 @@ export type Payment = {
   timestamp: string;         
 };
 
-export type PaginatedPayments = {
-    payments: Payment[];
-    total: number;
-    limit: number;
-    offset: number;
+
+export type PaymentPaginate = {
+  limit: number;
+  offset: number;
+}
+
+export type PaymentFilter = {
+  fromDate: Date
+  toDate: Date
+  status: string
+}
+
+export type PaymentResponse = {
+  payments: Payment[]
+  paymentssFilter: PaymentFilter 
+  paymentsPaginate: PaymentPaginate 
+  count: number
 }

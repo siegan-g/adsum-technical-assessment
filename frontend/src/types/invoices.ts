@@ -5,7 +5,25 @@ export type Invoice = {
   amount: number;            
   currency: string;          
   status: InvoiceStatus;     
-  dueDate: string;           
+  due_date: Date;           
   client: string;            
   timestamp: string;         
 };
+
+export type InvoicePaginate = {
+  limit: number;
+  offset: number;
+}
+
+export type InvoiceFilter = {
+  fromDate: Date
+  toDate: Date
+  status: string
+}
+
+export type InvoiceResponse = {
+  invoices: Invoice[]
+  invoicesFilter: InvoiceFilter
+  invoicesPaginate:InvoicePaginate 
+  count: number
+}

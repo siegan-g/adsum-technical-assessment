@@ -208,3 +208,7 @@ __marimo__/
 
 ##OpenTax
 config.toml
+frontend/.next
+frontend/next-env.d.ts
+frontend/node_modules/
+
