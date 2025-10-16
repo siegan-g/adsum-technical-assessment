@@ -1,9 +1,9 @@
-from sqlmodel import Field
+from sqlmodel import Field # type: ignore
 from pydantic import BaseModel
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime, timezone
-from infrastructure.database.repositories.base import OpenTaxEntity, GenericSqlRepository
+from infrastructure.database.repositories.base import OpenTaxEntity 
 
 class Invoice(OpenTaxEntity, table=True):
     # IGNORE: Unfortunatetly pylance/pyright doesn't play nicely with __tablename__ definitions without a hacky workaround
@@ -19,10 +19,18 @@ class Invoice(OpenTaxEntity, table=True):
 class InvoiceFilter(BaseModel):
     # Ensure BaseModel is implemented to keep a seperation of means of concern. This model should exist only on the application layer
     """
-    Class with relevant filters for the Payment Class. 
+    Class with relevant filters for the Invoice Class. 
     """
-    from_date:Optional[datetime] = None
-    to_date:Optional[datetime] = None
-    status:Optional[str] = None
-    offset:Optional[int] = None
-    limit:Optional[int] = None
+    from_date: Optional[datetime] = None
+    to_date: Optional[datetime] = None
+    status: Optional[str] = None
+
+class InvoicePaginate(BaseModel):
+    offset: Optional[int] = None
+    limit: Optional[int] = None
+
+class InvoiceResponse(BaseModel):
+    invoices: Optional[List[Invoice]] = None
+    invoice_filter: Optional[InvoiceFilter] = None
+    invoice_paginate: Optional[InvoicePaginate] = None
+    count: Optional[int] = 0

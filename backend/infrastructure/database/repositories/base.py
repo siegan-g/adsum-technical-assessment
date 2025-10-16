@@ -1,6 +1,6 @@
-from typing import Optional,TypeVar ,Generic,List, Any, Type
+from typing import Optional, TypeVar, Generic, List, Any, Type, cast
 from abc import ABC, abstractmethod
-from sqlmodel import SQLModel,Field,Session,select,and_ # type: ignore
+from sqlmodel import SQLModel, Field, Session, select, and_, func  # type: ignore
 from sqlmodel.sql.expression import SelectOfScalar
 
 
@@ -10,72 +10,95 @@ class OpenTaxEntity(SQLModel):
     Any Bounded Context should implement this class
     """
 
-    id: int | None = Field(None, description="Entity's Unique ID",primary_key=True)
-    
-T = TypeVar("T",bound=OpenTaxEntity)
-class GenericRepository(Generic[T],ABC):
-    
+    id: int | None = Field(None, description="Entity's Unique ID", primary_key=True)
+
+
+T = TypeVar("T", bound=OpenTaxEntity)
+
+
+class GenericRepository(Generic[T], ABC):
+
     @abstractmethod
-    def read(self,offset:Optional[int],limit:Optional[int],**filters:dict[str,Any])->List[T]:
+    def read(
+        self, offset: Optional[int], limit: Optional[int], **filters: Any
+    ) -> List[T]:
         raise NotImplementedError()
-    
+
     @abstractmethod
-    def insert(self,entity:T)->T:
+    def insert(self, entity: T) -> T:
         raise NotImplementedError()
-    
+
     @abstractmethod
-    def update(self,entity:T)->T:
-        raise NotImplementedError() 
+    def update(self, entity: T) -> T:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count(self, **filters: Any) -> int | None:
+        raise NotImplementedError()
+
 
 class GenericSqlRepository(GenericRepository[T]):
-    def __init__(self,session:Session,model:Type[T]) -> None:
+    def __init__(self, session: Session, model: Type[T]) -> None:
         self.session = session
         self.model = model
-        
-    def _build_sqlmodel_select(self,**filters:dict[str,Any])->SelectOfScalar:
+
+    # NOTE IF SOMETHING BREAKS COME BACK HERE
+    def _build_sqlmodel_select(
+        self,entity:Any,**filters: Any
+    ) -> SelectOfScalar[Any]:
         """
-        A simple select query builder which evalutes filter kwargs. 
+        A simple select query builder which evalutes filter kwargs.
         Has built in support for date filters if the [T] model has a timestamp field
         """
 
-        statement = select(self.model)
-        where_clauses:list[Any] = []
-        for key,value in filters.items():
+        statement = select(entity)
+        where_clauses: list[Any] = []
+        for key, value in filters.items():
             if value is None:
                 continue
-            if key == 'from_date' and hasattr(self.model,"timestamp"):
-                where_clauses.append(getattr(self.model,"timestamp") >= value)
-            elif key == 'to_date' and hasattr(self.model,"timestamp"):
-                where_clauses.append(getattr(self.model,"timestamp") <= value)
+            if key == "from_date" and hasattr(self.model, "timestamp"):
+                where_clauses.append(getattr(self.model, "timestamp") >= value)
+            elif key == "to_date" and hasattr(self.model, "timestamp"):
+                where_clauses.append(getattr(self.model, "timestamp") <= value)
             else:
-                if not hasattr((self.model),key):
+                if not hasattr(self.model, key):
                     raise ValueError(f"Invalid filter provided {key}")
-                where_clauses.append(getattr(self.model,key)==value)
-        
-        if len(where_clauses) > 1:      
+                where_clauses.append(getattr(self.model, key) == value)
+
+        if len(where_clauses) > 1:
             statement = statement.where(and_(*where_clauses))
         elif len(where_clauses) == 1:
             statement = statement.where(where_clauses[0])
-        
+
         return statement
-        
-    def read(self,offset:Optional[int],limit:Optional[int],**filters:dict[str,Any])->List[T]:
-        statement = self._build_sqlmodel_select(**filters)
+
+    def read(
+        self,
+        offset: Optional[int],
+        limit: Optional[int],
+        **filters: Any,
+    ) -> List[T]:
+        statement = self._build_sqlmodel_select(self.model,**filters)
         if offset is not None:
             statement = statement.offset(offset)
         if limit is not None:
             statement = statement.limit(limit)
         # IGNORE: It seems .all() returns a Sequence[Unknown] which causes a type error
-        return self.session.exec(statement).all() # type: ignore
+        return self.session.exec(statement).all()  # type: ignore
 
-    def insert(self,entity:T)->T:
+    def insert(self, entity: T) -> T:
         self.session.add(entity)
         self.session.commit()
         self.session.refresh(entity)
         return entity
-    
-    def update(self,entity:T)->T:
+
+    def update(self, entity: T) -> T:
         self.session.add(entity)
         self.session.commit()
         self.session.refresh(entity)
         return entity
+
+    def count(self, **filters: Any) -> int:
+        statement = self._build_sqlmodel_select(func.count(cast(Any, self.model.id)),**filters)
+        result = self.session.exec(statement).first()
+        return result if result is not None else 0
