@@ -10,7 +10,7 @@ export type Payment = {
 };
 
 export type PaginatedPayments = {
-    data: Payment[];
+    payments: Payment[];
     total: number;
     limit: number;
     offset: number;
