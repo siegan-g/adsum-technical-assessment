@@ -10,6 +10,7 @@ class AppSettings(BaseModel):
     prefix: str = "/api"
     max_limit: int = 100
     sink:str = "database"
+    origins:list[str] = ["http://localhost:3000"]
 
 
 class DatabaseSettings(BaseModel):
