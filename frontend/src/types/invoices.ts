@@ -23,7 +23,7 @@ export type InvoiceFilter = {
 
 export type InvoiceResponse = {
   invoices: Invoice[]
-  invoicesFilter: Invoice 
+  invoicesFilter: InvoiceFilter
   invoicesPaginate:InvoicePaginate 
   count: number
 }

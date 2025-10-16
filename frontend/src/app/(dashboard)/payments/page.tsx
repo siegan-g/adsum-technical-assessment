@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPayments } from "@/app/services/api";
 import { Payment } from "@/types/payments";
+import { usePaymentsStore } from "@/stores/paymentsStore";
 import {
   Table,
   TableBody,
@@ -17,35 +17,33 @@ import {
   Button,
   Stack,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 export default function PaymentsPage() {
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const today = new Date().toISOString().split("T")[0];
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  // Get state and actions from Zustand store
+  const { page, limit, fromDate, toDate, status, setPage, setFromDate, setToDate, setStatus, resetFilters } = usePaymentsStore();
 
-<<<<<<< Updated upstream
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["payments", page, fromDate, toDate],
-=======
-  const { data, isLoading, isError} = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["payments", page, fromDate, toDate, status],
->>>>>>> Stashed changes
     queryFn: () =>
       fetchPayments({
         limit,
         offset: (page - 1) * limit,
         from_date: fromDate,
         to_date: toDate,
-      }),
+        status: status
+      })
   });
-  const hasNextPage = (data?.length ?? 0) === limit;
+  const totalPages = Math.ceil((data?.count ?? 0) / limit);
+
   return (
     <Paper sx={{ p: 2, m: 2 }}>
       <Typography variant="h6" noWrap sx={{ my: 2 }}>
-        Payments
+        Payments 
       </Typography>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <TextField
@@ -63,10 +61,6 @@ export default function PaymentsPage() {
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
         />
-<<<<<<< Updated upstream
-        <Button variant="contained" onClick={() => refetch()}>
-          Filter
-=======
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>Status</InputLabel>
           <Select
@@ -82,7 +76,6 @@ export default function PaymentsPage() {
         </FormControl>
         <Button variant="outlined" onClick={resetFilters}>
           Clear Filters
->>>>>>> Stashed changes
         </Button>
       </Stack>
 
@@ -100,11 +93,11 @@ export default function PaymentsPage() {
                   <TableCell>Amount</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Merchant</TableCell>
-                  <TableCell>Timestamp</TableCell>
+                  <TableCell>Create Date</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.map((payment: Payment) => (
+                {data?.payments?.map((payment: Payment) => (
                   <TableRow key={payment.id}>
                     <TableCell>{payment.currency}</TableCell>
                     <TableCell>{payment.amount}</TableCell>
@@ -117,9 +110,10 @@ export default function PaymentsPage() {
             </Table>
           </TableContainer>
           <Pagination
-            count={page + (hasNextPage ? 1 : 0)}
+            count={totalPages}
             page={page}
             onChange={(_, value) => setPage(value)}
+            color="primary"
             sx={{ mt: 2 }}
           />
         </>
