@@ -1,11 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Box, Container, Paper, Typography } from '@mui/material';
+import { Box, Container, Paper, Typography, Stack, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AttachMoney, Receipt, CheckCircle, Error } from '@mui/icons-material';
 import { fetchSummary } from './services/api';
-import { Summary } from '@/types/summary';
 
 const GridContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
@@ -53,6 +52,11 @@ export default function Home() {
     queryKey: ['summary', fromDate, toDate],
     queryFn: () => fetchSummary({ from_date: fromDate, to_date: toDate }),
   });
+
+  // Compute counts for Paid vs Unpaid invoices from summary
+  const paidInvoiceCount = summary?.paid_invoices_count ?? 0;
+  const unpaidInvoiceCount = summary?.unpaid_invoices_count ?? 0;
+  const maxInvoiceCount = Math.max(paidInvoiceCount, unpaidInvoiceCount, 1);
 
   if (isError || !summary) {
     return <Typography color="error">Failed to load dashboard data</Typography>;
@@ -124,6 +128,26 @@ export default function Home() {
             color="#f44336"
           />
         </GridContainer>
+
+        {/* Paid vs Unpaid Invoices Bar Chart */}
+        <Paper sx={{ mt: 3, p: 3 }} elevation={2}>
+          <Typography variant="h6" gutterBottom>
+            Paid vs Unpaid Invoices
+          </Typography>
+          <Stack direction="row" spacing={4} alignItems="end" sx={{ height: 160 }}>
+            <Stack alignItems="center" spacing={1} sx={{ height: 1 }}>
+              <Box sx={{ width: 64, height: `${(paidInvoiceCount / maxInvoiceCount) * 100}%`, backgroundColor: 'success.main', borderRadius: 1 }} />
+              <Typography variant="body2">Paid</Typography>
+              <Typography variant="caption" color="text.secondary">{paidInvoiceCount}</Typography>
+            </Stack>
+            <Stack alignItems="center" spacing={1} sx={{ height: 1 }}>
+              <Box sx={{ width: 64, height: `${(unpaidInvoiceCount / maxInvoiceCount) * 100}%`, backgroundColor: 'warning.main', borderRadius: 1 }} />
+              <Typography variant="body2">Unpaid</Typography>
+              <Typography variant="caption" color="text.secondary">{unpaidInvoiceCount}</Typography>
+            </Stack>
+          </Stack>
+          <Divider sx={{ mt: 2 }} />
+        </Paper>
       </Box>
     </Container>
   );
