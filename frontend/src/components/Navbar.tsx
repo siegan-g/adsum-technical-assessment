@@ -13,8 +13,14 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import Link from 'next/link';
 
-const pages = ['Payments', 'Invoices', 'Logs'];
+const pages = [
+  { name: 'Payments', href: '/payments' },
+  { name: 'Invoices', href: '/invoices' },
+  { name: 'Logs', href: '/agent-logs' },
+  { name: 'AI Assistant', href: '/ai-assistant' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -45,7 +51,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -55,7 +61,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-           OpenTax 
+            OpenTax
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -86,8 +92,10 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Link href={page.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -97,7 +105,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -112,13 +120,18 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+              <Link
+                key={page.name}
+                href={page.href}
+                style={{ textDecoration: 'none' }}
               >
-                {page}
-              </Button>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>

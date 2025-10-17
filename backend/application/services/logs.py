@@ -25,3 +25,9 @@ class AgentLogsService:
         with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
             uow.logs.update(log)
             uow.commit()
+            
+    def count(self,**filters: Any) -> int | None:
+        with UnitOfWork(session_factory=session_factory(self.engine)) as uow:
+            count = uow.logs.count(**filters)
+            uow.commit()
+            return count
