@@ -78,3 +78,8 @@ export async function fetchSummary({
   const res = await axios.get<Summary>(API_URL + "/summary", { params });
   return res.data;
 }
+
+export async function fetchAiAssistant(prompt:string){
+  const res = await axios.post(API_URL+"/ai-assistant",{prompt});
+  return res.data;
+}
