@@ -1,4 +1,4 @@
-type Summary = {
+export type Summary = {
 totalPaymentsAmount: number;
 totalPaymentsCount:number;
 totalInvoicesAmount:number;

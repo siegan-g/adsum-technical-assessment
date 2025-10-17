@@ -1,10 +1,129 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { Box, Container, Paper, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { AttachMoney, Receipt, CheckCircle, Error } from '@mui/icons-material';
+import { fetchSummary } from './services/api';
+import { Summary } from '@/types/summary';
+
+const GridContainer = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gap: theme.spacing(3),
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  '@media (max-width: 1200px)': {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+  '@media (max-width: 600px)': {
+    gridTemplateColumns: '1fr',
+  },
+}));
+
+const StatCard = ({ title, value, icon, color }: { title: string; value: string | number; icon: React.ReactNode; color: string }) => (
+  <Paper
+    sx={{
+      p: 3,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      height: '100%'
+    }}
+    elevation={2}
+  >
+    <Box sx={{ color: color }}>{icon}</Box>
+    <Box>
+      <Typography variant="h6" component="div">
+        {value}
+      </Typography>
+      <Typography color="text.secondary" variant="body2">
+        {title}
+      </Typography>
+    </Box>
+  </Paper>
+);
 
 export default function Home() {
+  // Get data for the last 30 days
+  const toDate = new Date().toISOString().split('T')[0];
+  const fromDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split('T')[0];
+
+  const { data: summary, isLoading, isError } = useQuery({
+    queryKey: ['summary', fromDate, toDate],
+    queryFn: () => fetchSummary({ from_date: fromDate, to_date: toDate }),
+  });
+
+
+  if (isError || !summary) {
+    return <Typography color="error">Failed to load dashboard data</Typography>;
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
   return (
-    <div className={styles.page}>
-      <p>Dashboard Goes Here</p>
-    </div>
+    <Container maxWidth="xl">
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Dashboard Overview
+        </Typography>
+        <GridContainer>
+          <StatCard
+            title="Total Payments"
+            value={formatCurrency(summary.totalPaymentsAmount)}
+            icon={<AttachMoney fontSize="large" />}
+            color="#2196f3"
+          />
+          <StatCard
+            title="Total Invoices"
+            value={formatCurrency(summary.totalInvoicesAmount)}
+            icon={<Receipt fontSize="large" />}
+            color="#4caf50"
+          />
+          <StatCard
+            title="Paid Invoices"
+            value={formatCurrency(summary.paidInvoicesAmount)}
+            icon={<CheckCircle fontSize="large" />}
+            color="#00c853"
+          />
+          <StatCard
+            title="Unpaid Invoices"
+            value={formatCurrency(summary.unpaidInvoicesAmount)}
+            icon={<Error fontSize="large" />}
+            color="#f44336"
+          />
+          
+          <StatCard
+            title="Payment Count"
+            value={summary.totalPaymentsCount}
+            icon={<AttachMoney fontSize="large" />}
+            color="#2196f3"
+          />
+          <StatCard
+            title="Invoice Count"
+            value={summary.totalInvoicesCount}
+            icon={<Receipt fontSize="large" />}
+            color="#4caf50"
+          />
+          <StatCard
+            title="Paid Invoice Count"
+            value={summary.paidInvoicesCount}
+            icon={<CheckCircle fontSize="large" />}
+            color="#00c853"
+          />
+          <StatCard
+            title="Unpaid Invoice Count"
+            value={summary.unpaidInvoicesCount}
+            icon={<Error fontSize="large" />}
+            color="#f44336"
+          />
+        </GridContainer>
+      </Box>
+    </Container>
   );
 }

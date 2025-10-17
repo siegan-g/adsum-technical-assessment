@@ -2,6 +2,7 @@ import axios from "axios";
 import { PaymentResponse } from "@/types/payments";
 import { InvoiceResponse } from "@/types/invoices";
 import { AgentLogsResponse } from "@/types/agent-logs";
+import { Summary } from '@/types/summary';
 
 // Move to .env
 const API_URL = "http://localhost:8000/api";
@@ -66,5 +67,14 @@ export async function fetchAgentLogs({
   if (to_date) params.to_date = to_date;
   if (level) params.level = level;
   const res = await axios.get<AgentLogsResponse>(API_URL + "/agent-logs", { params });
+  return res.data;
+}
+
+export async function fetchSummary({
+  from_date,
+  to_date
+}: { from_date: string, to_date: string }): Promise<Summary> {
+  const params: Record<string, string | number> = { from_date, to_date };
+  const res = await axios.get<Summary>(API_URL + "/summary", { params });
   return res.data;
 }
