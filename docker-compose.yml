@@ -18,8 +18,7 @@ services:
     depends_on:
       - open-tax-db
     volumes:
-      - ./backend:/app
-      - ./backend/config.toml:/app/config.toml
+      - ./backend-config.toml:/app/config.toml
     command: sh -c "opentax seed && uvicorn presentation.api.main:app --host 0.0.0.0 --port 8000 --reload"
   opentax-frontend:
     build: ./frontend
