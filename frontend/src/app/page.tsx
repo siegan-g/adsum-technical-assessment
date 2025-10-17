@@ -54,17 +54,18 @@ export default function Home() {
     queryFn: () => fetchSummary({ from_date: fromDate, to_date: toDate }),
   });
 
-
   if (isError || !summary) {
     return <Typography color="error">Failed to load dashboard data</Typography>;
   }
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-GB', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'GBP'
     }).format(amount);
   };
+
+  console.log(summary)
 
   return (
     <Container maxWidth="xl">
@@ -75,50 +76,50 @@ export default function Home() {
         <GridContainer>
           <StatCard
             title="Total Payments"
-            value={formatCurrency(summary.totalPaymentsAmount)}
+            value={formatCurrency(summary.total_payments_amount)}
             icon={<AttachMoney fontSize="large" />}
             color="#2196f3"
           />
           <StatCard
             title="Total Invoices"
-            value={formatCurrency(summary.totalInvoicesAmount)}
+            value={formatCurrency(summary.total_invoices_amount)}
             icon={<Receipt fontSize="large" />}
             color="#4caf50"
           />
           <StatCard
             title="Paid Invoices"
-            value={formatCurrency(summary.paidInvoicesAmount)}
+            value={formatCurrency(summary.paid_invoices_amount)}
             icon={<CheckCircle fontSize="large" />}
             color="#00c853"
           />
           <StatCard
             title="Unpaid Invoices"
-            value={formatCurrency(summary.unpaidInvoicesAmount)}
+            value={formatCurrency(summary.unpaid_invoices_amount)}
             icon={<Error fontSize="large" />}
             color="#f44336"
           />
           
           <StatCard
             title="Payment Count"
-            value={summary.totalPaymentsCount}
+            value={summary.total_payments_count}
             icon={<AttachMoney fontSize="large" />}
             color="#2196f3"
           />
           <StatCard
             title="Invoice Count"
-            value={summary.totalInvoicesCount}
+            value={summary.total_invoices_count}
             icon={<Receipt fontSize="large" />}
             color="#4caf50"
           />
           <StatCard
             title="Paid Invoice Count"
-            value={summary.paidInvoicesCount}
+            value={summary.paid_invoices_count}
             icon={<CheckCircle fontSize="large" />}
             color="#00c853"
           />
           <StatCard
             title="Unpaid Invoice Count"
-            value={summary.unpaidInvoicesCount}
+            value={summary.unpaid_invoices_count}
             icon={<Error fontSize="large" />}
             color="#f44336"
           />

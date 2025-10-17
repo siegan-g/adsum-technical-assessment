@@ -1,11 +1,11 @@
 export type Summary = {
-totalPaymentsAmount: number;
-totalPaymentsCount:number;
-totalInvoicesAmount:number;
-totalInvoicesCount:number;
+total_payments_amount: number;
+total_payments_count:number;
+total_invoices_amount:number;
+total_invoices_count:number;
 
-paidInvoicesAmount:number;
-paidInvoicesCount:number;
-unpaidInvoicesAmount:number;
-unpaidInvoicesCount:number;
+paid_invoices_amount:number;
+paid_invoices_count:number;
+unpaid_invoices_amount:number;
+unpaid_invoices_count:number;
 };
