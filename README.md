@@ -7,7 +7,10 @@
 - This should set you up with a basic instance. You will need further [configuration](#configuration) if you want to set up the ai chatbot feature
 
 - The default ports are set to `localhost:3000` and `localhost:8000` for the Dashboard and APIs respectively
-
+  
+### Troubleshooting
+- If the container throws a segmentation fault while `pip` is installing packages, simply retry running the docker compose file
+- Likewise npm may through errors while installing dependencies, rerun the compose file
 ### Configuration
 #### OpenTax Backend
 
