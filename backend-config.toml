@@ -1,0 +1,6 @@
+[database]
+host="open-tax-db"
+[ai]
+api_key=""
+instructions="""
+"""
