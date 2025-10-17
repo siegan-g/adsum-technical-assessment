@@ -59,7 +59,7 @@ export async function fetchAgentLogs({
   offset: number;
   from_date?: string;
   to_date?: string;
-  level: string;
+  level?: string;
 }): Promise<AgentLogsResponse> {
   const params: Record<string, string | number> = { limit, offset };
   if (from_date) params.from_date = from_date;

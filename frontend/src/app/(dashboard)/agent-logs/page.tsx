@@ -35,15 +35,15 @@ export default function AgentLogsPage() {
         offset: (page - 1) * limit,
         from_date: fromDate,
         to_date: toDate,
-        level:level 
-      })
+        level: level
+      }),
   });
   const totalPages = Math.ceil((data?.count ?? 0) / limit);
-  console.log(data);
+
   return (
     <Paper sx={{ p: 2, m: 2 }}>
       <Typography variant="h6" noWrap sx={{ my: 2 }}>
-        Agent Logs 
+        Agent Logs
       </Typography>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <TextField
@@ -68,7 +68,7 @@ export default function AgentLogsPage() {
             label="Level"
             onChange={(e) => setLevel(e.target.value)}
           >
-            <MenuItem value="">ALL</MenuItem>
+            <MenuItem value="">All</MenuItem>
             <MenuItem value="DEBUG">DEBUG</MenuItem>
             <MenuItem value="INFO">INFO</MenuItem>
             <MenuItem value="WARNING">WARNING</MenuItem>
@@ -96,13 +96,15 @@ export default function AgentLogsPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.agentLogs?.map((agentLogs: AgentLogs) => (
-                  <TableRow key={agentLogs.id}>
-                    <TableCell>{agentLogs.level}</TableCell>
-                    <TableCell>{agentLogs.message}</TableCell>
-                    <TableCell>{new Date(agentLogs.timestamp).toLocaleString()}</TableCell>
-                  </TableRow>
-                ))}
+                {data?.logs?.map((log: AgentLogs) => (
+                    <TableRow key={log.id}>
+                      <TableCell>{log.level}</TableCell>
+                      <TableCell>{log.message}</TableCell>
+                      <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))
+                }
+ 
               </TableBody>
             </Table>
           </TableContainer>

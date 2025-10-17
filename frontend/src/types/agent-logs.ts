@@ -19,7 +19,7 @@ export type AgentLogsFilter = {
 }
 
 export type AgentLogsResponse = {
-  agentLogs: AgentLogs[]
+  logs: AgentLogs[]
   agentLogsFilter: AgentLogsFilter
   agentLogsPaginate:AgentLogsPaginate 
   count: number
