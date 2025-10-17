@@ -18,7 +18,8 @@ import Link from 'next/link';
 const pages = [
   { name: 'Payments', href: '/payments' },
   { name: 'Invoices', href: '/invoices' },
-  { name: 'Logs', href: '/agent-logs' }
+  { name: 'Logs', href: '/agent-logs' },
+  { name: 'AI Assistant', href: '/ai-assistant' },
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

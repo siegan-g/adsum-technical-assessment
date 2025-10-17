@@ -17,11 +17,13 @@ import { v4 as uuid } from "uuid";
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const { messages, addMessage } = useChatStore();
-
   const mutation = useMutation({
     mutationFn: fetchAiAssistant,
     onSuccess: (data) => {
-      addMessage({ id: uuid(), role: "assistant", content: data.message });
+      addMessage({ id: uuid(), role: "assistant", content: data.response });
+    },
+    onError:(error)=>{
+      addMessage({id:uuid(),role:"assistant",content:"Sorry, I couldn't process this request right now, try again later."})
     }
   });
 
