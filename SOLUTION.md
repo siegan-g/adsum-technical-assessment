@@ -1,4 +1,4 @@
-### OpenTax Backend
+# OpenTax Backend
 ## Architecture
 A Layered Architecture approach was used to structure the project with each layer structured as follows:
 ### Models
@@ -66,3 +66,16 @@ Much can be done to make this project far more production ready to name a few ch
 - Session Authentication with [Redis](https://redis.io/blog/json-web-tokens-jwt-are-dangerous-for-user-sessions/)
 - Create a message queue for Database Reads/Writes
 - Abstract Service Layers to allow DI of Ports. You can then for example read and write invoices to a separate data store, make mocks of the service layer easier and so on
+
+ # OpenTax Frontend
+ A Next.js application application using Material UI components to quickly bootstrap a user interface.
+ React Query was used to fetch data from the server side
+ and Zastund for client side state management (store current page and filters, chatbot history in Browsers local storage)
+
+
+ ## Trade Offs and Future
+ Most of my design and attention went more into the backend so the front end could use some more attention namely:
+ - Create a react component for tabular data rather violating DRY principle
+ - Better validation of API schema validation
+ - Next.js environment variables - The API URL should not be hard coded
+ - More advanced use of React Query
