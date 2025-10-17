@@ -21,6 +21,14 @@ services:
       - ./backend:/app
       - ./backend/config.toml:/app/config.toml
     command: sh -c "opentax seed && uvicorn presentation.api.main:app --host 0.0.0.0 --port 8000 --reload"
-
+  opentax-frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - opentax-backend
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm run build && npm start"
 volumes:
   postgres_data:
