@@ -25,7 +25,7 @@
 
 ## Docs
 
-- FastAPI generates OpenAPI docs on the fly, you can access the documentation via `localhost:8000/api`
+- FastAPI generates OpenAPI docs on the fly, you can access the documentation via `localhost:8000/docs`
 
 ## CLI 
 
