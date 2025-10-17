@@ -1,8 +1,8 @@
 # OpenTax Backend
 ## Architecture
-A Layered Architecture approach was used to structure the project with each layer structured as follows:
+A Layered Architecture approach was used to structure the project with each layer presented as follows:
 ### Models
-  The business domains and entities which wereidentified e.g. Payments, Invoices, Agent Logs, AI Assistant Prompts and Summary
+  The business domains and entities which were identified e.g. Payments, Invoices, Agent Logs, AI Assistant Prompts and Summary
 
   Each model implements a Base class `OpenTaxEntity` which all models can implement.
 
@@ -10,7 +10,9 @@ A Layered Architecture approach was used to structure the project with each laye
 
   ### Infrastructure
 
-  Includes of the data access layer which makes use of a repository pattern to interact with various data stores.
+  Includes of the data access layer which makes use of a repository pattern to allow interaction various data stores, SQL is an implementation with the `GenericSQLRepository`.
+
+  #### Ports and Adapters
 
   Also serves as the layer to include any ports and adapters e.g. The `ai` directory includes a Port `llm.py` to which the adapters `mock_llm.py` or `gemini_llm.py` can implement. This implementation allows the AI Service layer to have hotswapable functionality via dependency injection. This also makes the system loosely coupled should you want to decouple the service layer later onwards e.g. microservice. See Alistair Cockburn's paper on this [architecture](https://alistair.cockburn.us/hexagonal-architecture)
 
@@ -19,7 +21,7 @@ Contains functionality related to services and core utilities of the application
 
 
 ### Presentation
-The layer that handle's end-user I/O. This would include API endpoints, webpages or a CLI. The FastAPI HTTP webserver sits on this layer
+The layer that handle's end-user I/O. This would include API endpoints, webpages or a CLI. The FastAPI HTTP webserver sits on this layer and an interactive CLI.
 
 #### On Routing
 - You will experience a Cross-origin resource sharing (CORS) error when fetching API data from your browser, including the OpenTax Frontend as it is listening on a different port. As a result FastAPI needs to have a middleware handler applying CORS, supported origins are passed in the application settings
@@ -29,27 +31,27 @@ The layer that handle's end-user I/O. This would include API endpoints, webpages
 ### Repository Pattern
 
 Purpose:
+- Create an abstraction over different data access layers, for example an SFTP, SQL Database, CSV, or a MockRepository for TDD 
+- Allows for scalability and makes your service layer more flexible
 
 ### Unit of Work
+
+Purpose:
+- Makes database queries transactional allowing for operations to open and close when you need.
+- Ensure data is consistent and can prevent concurrency issues
 
   Guarantees transactional boundaries (`commit`/`rollback`) and groups repository operations per request/use case.
 
   #### Notes and Trade-Offs
   The serialization between SQLModel and FastAPI objects under the hood strictly require a transaction to be committed otherwise the `rollback()` that is called on the UOWs exit will result a return of empty data.
 
-#### Purpose
-
 ### Dependency Injection Containers
 - `dependency_container.py`
 
 #### Purpose
-  - Centralized factory module `application/dependency_container.py` acts as a lightweight Service Locator.
-  - Provides constructors for settings, logger, database engine, AI clients, and application services. This decouples route handlers from concrete implementations and eases testing.
-
-- **Database and ORM**:
-
-  - SQLModel + SQLAlchemy engine management in `infrastructure/database/session.py` with `create_sqlmodel_engine` and `session_factory` abstractions.
-  - Metadata creation happens during engine provisioning in the DI container to ensure schema availability in local/dev contexts.
+  - Provides as a centralized factory establishing dependencies and returns services with these dependencies
+  - Injects dependencies without having to tightly couple these dependencies in the implementation layer (presentation/API)
+  - Allows for TDD since mock dependencies can be injected
 
 ## Testing
 - A few simple unit tests with pytest to showcase the use of testing. 
